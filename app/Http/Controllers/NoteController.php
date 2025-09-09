@@ -106,6 +106,7 @@ class NoteController extends Controller
     {
         $this->authorize('update', $note);
         $note->update(['is_pinned' => ! $note->is_pinned]);
+        $note->save();
         return back()->with('success', 'Note pinned successfully.');
     }
 
@@ -113,6 +114,7 @@ class NoteController extends Controller
     {
         $this->authorize('update', $note);
         $note->update(['is_archived' => ! $note->is_archived]);
+        $note->save();
         return back()->with('success', 'Note archived successfully.');
 
     }
