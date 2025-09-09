@@ -1,0 +1,30 @@
+<x-app-layout>
+    <h1 class="text-xl font-bold mb-4">✏️ Note’ni tahrirlash</h1>
+
+    <form action="{{ route('notes.update', $note) }}" method="POST" class="space-y-4">
+        @csrf
+        @method('PUT')
+
+        <div>
+            <label class="block font-semibold">Sarlavha</label>
+            <input type="text" name="title" value="{{ old('title', $note->title) }}" required
+                   class="w-full border rounded px-3 py-2">
+            @error('title')
+            <p class="text-red-500 text-sm">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block font-semibold">Kontent</label>
+            <textarea name="content" rows="5" required
+                      class="w-full border rounded px-3 py-2">{{ old('content', $note->content) }}</textarea>
+            @error('content')
+            <p class="text-red-500 text-sm">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <button class="bg-green-500 text-white px-4 py-2 rounded">Yangilash</button>
+        <a href="{{ route('notes.index') }}" class="ml-2 text-gray-600">Bekor qilish</a>
+    </form>
+</x-app-layout>
+

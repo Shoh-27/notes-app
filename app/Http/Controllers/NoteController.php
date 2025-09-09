@@ -36,7 +36,9 @@ class NoteController extends Controller
             'content' => 'required|string'
         ]);
 
-        auth()->user()->create($request->only(['title', 'content']));
+        auth()->user()->notes()->create(
+            $request->only('title', 'content')
+        );
         return redirect()->route('notes.index')->with('success', 'Note created successfully.');
 
     }
