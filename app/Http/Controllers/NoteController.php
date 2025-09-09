@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Mockery\Matcher\Not;
 
 class NoteController extends Controller
 {
@@ -12,7 +14,8 @@ class NoteController extends Controller
      */
     public function index()
     {
-        //
+        $notes = Note::where('user_id', Auth::id())->latest()->get();
+        return view('notes.index', compact('notes'));
     }
 
     /**
@@ -20,7 +23,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        //
+        return view('notes.create');
     }
 
     /**
@@ -28,7 +31,14 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string'
+        ]);
+
+        auth()->user()->create($request->only(['title', 'content']));
+        return redirect()->route('notes.index')->with('success', 'Note created successfully.');
+
     }
 
     /**
@@ -44,7 +54,8 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        //
+        $this->authorize('update', $note);
+        return view('notes.edit', compact('note'));
     }
 
     /**
@@ -52,7 +63,15 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //
+        $this->authorize('update', $note);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string'
+        ]);
+
+        $note->update($request->only(['title', 'content']));
+        return redirect()->route('notes.index')->with('success', 'Note updated successfully.');
     }
 
     /**
@@ -60,6 +79,8 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        $this->authorize('delete', $note);
+        $note->delete();
+        return redirect()->route('notes.index')->with('success', 'Note deleted successfully.');
     }
 }
