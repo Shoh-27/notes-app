@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('layouts.app')
+@section('content')
     <h1 class="text-xl font-bold mb-4">Mening Notelarim</h1>
 
     <form method="GET" action="{{ route('notes.index') }}" class="mb-4">
@@ -7,6 +8,17 @@
                class="border rounded px-3 py-2 w-1/2">
         <button class="bg-gray-500 text-white px-4 py-2 rounded">Qidirish</button>
     </form>
+
+    @if(auth()->user()->role === 'admin')
+        <div class="mb-3">
+            <a href="{{ route('categories.create') }}" class="btn btn-primary">
+                + Add New Category
+            </a>
+            <a href="{{ route('categories.index') }}" class="btn btn-outline-secondary">
+                Manage Categories
+            </a>
+        </div>
+    @endif
 
 
     <a href="{{ route('notes.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Yangi note</a>
@@ -41,5 +53,4 @@
             </li>
         @endforeach
     </ul>
-
-</x-app-layout>
+@endsection

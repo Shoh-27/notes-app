@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('content')
     <h1 class="text-xl font-bold mb-4">✍️ Yangi Note qo‘shish</h1>
 
     <form action="{{ route('notes.store') }}" method="POST" class="space-y-4">
@@ -39,5 +41,5 @@
         <button class="bg-blue-500 text-white px-4 py-2 rounded">Saqlash</button>
         <a href="{{ route('notes.index') }}" class="ml-2 text-gray-600">Bekor qilish</a>
     </form>
-</x-app-layout>
+@endsection
 
