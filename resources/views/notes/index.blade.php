@@ -9,6 +9,7 @@
                 <h2 class="font-semibold">{{ $note->title }}</h2>
                 <p>{{ $note->content }}</p>
                 <a href="{{ route('notes.edit', $note) }}" class="text-blue-600">✏️ Edit</a>
+{{--                <p>{{$category->name}}</p>--}}
                 <form action="{{ route('notes.destroy', $note) }}" method="POST" class="inline">
                     @csrf @method('DELETE')
                     <button class="text-red-600">🗑️ Delete</button>

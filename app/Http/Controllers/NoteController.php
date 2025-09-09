@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,8 @@ class NoteController extends Controller
     public function index()
     {
         $notes = Note::where('user_id', Auth::id())->latest()->get();
-        return view('notes.index', compact('notes'));
+        $categories = Category::all();
+        return view('notes.index', compact('notes', 'categories'));
     }
 
     /**
@@ -23,7 +25,8 @@ class NoteController extends Controller
      */
     public function create()
     {
-        return view('notes.create');
+        $categories = Category::all();
+        return view('notes.create', compact('categories'));
     }
 
     /**
@@ -33,11 +36,12 @@ class NoteController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string'
+            'content' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         auth()->user()->notes()->create(
-            $request->only('title', 'content')
+            $request->only('title', 'content', 'category_id')
         );
         return redirect()->route('notes.index')->with('success', 'Note created successfully.');
 
@@ -57,7 +61,8 @@ class NoteController extends Controller
     public function edit(Note $note)
     {
         $this->authorize('update', $note);
-        return view('notes.edit', compact('note'));
+        $categories = Category::all();
+        return view('notes.edit', compact('note', 'categories'));
     }
 
     /**
@@ -69,10 +74,11 @@ class NoteController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string'
+            'content' => 'required|string',
+            'category_id' => 'nullable|exists:categories,id'
         ]);
 
-        $note->update($request->only(['title', 'content']));
+        $note->update($request->only(['title', 'content', 'category_id']));
         return redirect()->route('notes.index')->with('success', 'Note updated successfully.');
     }
 

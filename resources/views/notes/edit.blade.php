@@ -23,6 +23,20 @@
             @enderror
         </div>
 
+        <div>
+            <label class="block font-semibold">Kategoriya</label>
+            <select name="category_id" class="w-full border rounded px-3 py-2">
+                <option value="">Tanlanmagan</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}"
+                        @selected(old('category_id', $note->category_id ?? '') == $category->id)>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+
         <button class="bg-green-500 text-white px-4 py-2 rounded">Yangilash</button>
         <a href="{{ route('notes.index') }}" class="ml-2 text-gray-600">Bekor qilish</a>
     </form>
