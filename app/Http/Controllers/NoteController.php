@@ -13,12 +13,22 @@ class NoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notes = Note::where('user_id', Auth::id())->latest()->get();
+        $query = Note::where('user_id', auth()->id());
+
+        if ($search = $request->input('q')) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        $notes = $query->latest()->get();
         $categories = Category::all();
         return view('notes.index', compact('notes', 'categories'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -90,5 +100,20 @@ class NoteController extends Controller
         $this->authorize('delete', $note);
         $note->delete();
         return redirect()->route('notes.index')->with('success', 'Note deleted successfully.');
+    }
+
+    public function pin(Note $note)
+    {
+        $this->authorize('update', $note);
+        $note->update(['is_pinned' => ! $note->is_pinned]);
+        return back()->with('success', 'Note pinned successfully.');
+    }
+
+    public function archive(Note $note)
+    {
+        $this->authorize('update', $note);
+        $note->update(['is_archived' => ! $note->is_archived]);
+        return back()->with('success', 'Note archived successfully.');
+
     }
 }

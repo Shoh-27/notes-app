@@ -25,6 +25,8 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('notes', NoteController::class);
+    Route::patch('notes/{note}/pin', [NoteController::class, 'pin'])->name('notes.pin');
+    Route::patch('notes/{note}/archive', [NoteController::class, 'archive'])->name('notes.archive');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
