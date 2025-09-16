@@ -15,6 +15,7 @@ Admin esa kategoriyalarni qo‘shishi va boshqarishi mumkin.
 ✅ Search notes (title, content)  
 ✅ Categories (admin only)  
 ✅ Dark mode (optional)  
+✅ Password-protected notes
 
 ---
 
