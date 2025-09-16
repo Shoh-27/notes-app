@@ -48,22 +48,50 @@ class NoteController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category_id' => 'nullable|exists:categories,id',
+            'password' => 'nullable|string|min:4',
         ]);
 
-        auth()->user()->notes()->create(
-            $request->only('title', 'content', 'category_id')
-        );
+        $data = $request->only('title', 'content', 'category_id');
+
+        if ($request->filled('password')) {
+            $data['is_protected'] = true;
+            $data['password'] = bcrypt($request->password);
+        }
+
+        auth()->user()->notes()->create($data);
+
         return redirect()->route('notes.index')->with('success', 'Note created successfully.');
-
     }
-
     /**
      * Display the specified resource.
      */
-    public function show(Note $note)
+    public function show(Note $note, Request $request)
     {
-        //
+        $this->authorize('view', $note);
+
+        if ($note->is_protected) {
+            if (!$request->session()->get("unlocked_note_{$note->id}")) {
+                return view('notes.unlock', compact('note'));
+            }
+        }
+
+        return view('notes.show', compact('note'));
     }
+
+    public function unlock(Request $request, Note $note)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        if (\Hash::check($request->password, $note->password)) {
+            $request->session()->put("unlocked_note_{$note->id}", true);
+            return redirect()->route('notes.show', $note);
+        }
+
+        return back()->withErrors(['password' => 'Incorrect password']);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -85,10 +113,22 @@ class NoteController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'category_id' => 'nullable|exists:categories,id'
+            'category_id' => 'nullable|exists:categories,id',
+            'password' => 'nullable|string|min:4',
         ]);
 
-        $note->update($request->only(['title', 'content', 'category_id']));
+        $data = $request->only('title', 'content', 'category_id');
+
+        if ($request->filled('password')) {
+            $data['is_protected'] = true;
+            $data['password'] = bcrypt($request->password);
+        } else {
+            $data['is_protected'] = false;
+            $data['password'] = null;
+        }
+
+        $note->update($data);
+
         return redirect()->route('notes.index')->with('success', 'Note updated successfully.');
     }
 

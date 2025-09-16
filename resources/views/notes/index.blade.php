@@ -31,7 +31,6 @@
                     @if($note->is_pinned) 📌 @endif
                     @if($note->is_archived) 🗄️ @endif
                 </h2>
-                <p>{{ $note->content }}</p>
                 <small>Kategoriya: {{ $note->category->name ?? '—' }}</small><br>
 
                 <a href="{{ route('notes.edit', $note) }}" class="text-blue-600">✏️ Edit</a>
