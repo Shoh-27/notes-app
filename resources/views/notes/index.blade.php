@@ -34,6 +34,10 @@
                 <small>Kategoriya: {{ $note->category->name ?? '—' }}</small><br>
 
                 <a href="{{ route('notes.edit', $note) }}" class="text-blue-600">✏️ Edit</a>
+                <a href="{{ route('notes.show', $note) }}"
+                   class="inline-block mt-2 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded">
+                    📖 Ko‘rish
+                </a>
 
                 <form action="{{ route('notes.destroy', $note) }}" method="POST" class="inline">
                     @csrf @method('DELETE')

@@ -29,17 +29,36 @@
             <select name="category_id" class="w-full border rounded px-3 py-2">
                 <option value="">Tanlanmagan</option>
                 @foreach($categories as $category)
-                    <option value="{{ $category->id }}"
-                        @selected(old('category_id', $note->category_id ?? '') == $category->id)>
+                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
                         {{ $category->name }}
                     </option>
                 @endforeach
             </select>
         </div>
 
+        <!-- 🔒 Parol qo‘yish -->
+        <div>
+            <label class="block font-semibold">Parol (ixtiyoriy)</label>
+            <div class="flex">
+                <input type="password" id="password" name="password"
+                       class="w-full border rounded-l px-3 py-2"
+                       placeholder="Agar note’ni himoyalamoqchi bo‘lsangiz parol kiriting">
+                <button type="button" onclick="togglePassword()"
+                        class="bg-gray-200 px-3 rounded-r">👁️</button>
+            </div>
+            @error('password')
+            <p class="text-red-500 text-sm">{{ $message }}</p>
+            @enderror
+        </div>
 
         <button class="bg-blue-500 text-white px-4 py-2 rounded">Saqlash</button>
         <a href="{{ route('notes.index') }}" class="ml-2 text-gray-600">Bekor qilish</a>
     </form>
-@endsection
 
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+@endsection

@@ -37,5 +37,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 });
 
-
+Route::post('notes/{note}/unlock', [NoteController::class, 'unlock'])
+    ->name('notes.unlock')
+    ->middleware('auth');
 require __DIR__.'/auth.php';

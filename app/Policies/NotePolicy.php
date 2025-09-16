@@ -19,10 +19,11 @@ class NotePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, note $note): bool
+    public function view(User $user, Note $note): bool
     {
-        //
+        return $user->id === $note->user_id;
     }
+
 
     /**
      * Determine whether the user can create models.
