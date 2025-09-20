@@ -31,7 +31,7 @@ Admin esa kategoriyalarni qo‘shishi va boshqarishi mumkin.
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/username/notes-app.git
+git clone https://github.com/Shoh-27/notes-app.git
 
 # 2. Enter project folder
 cd notes-app
